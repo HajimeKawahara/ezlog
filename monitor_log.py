@@ -2,7 +2,9 @@
 
 in your shell
 $ nohup python -u fit.py >& log &
-$ python monitor_log.py log
+$ python monitor_log.py log (backend)
+
+backend: terminalplot, plotext
 
 """
 
@@ -40,19 +42,38 @@ def count_steps(logfile):
 
 if __name__ == "__main__":
     import sys
-    import terminalplot
     import numpy as np
-    from terminalplot import get_terminal_size
-    columns = get_terminal_size().columns
-    
+
     step, ctime = count_steps(sys.argv[1])
-    if True:
+
+    backend = "terminalplot"
+    if len(sys.argv)>2:
+        backend = sys.argv[2]
+        
+    if backend == "terminalplot":
+        import terminalplot
+        from terminalplot import get_terminal_size
+
+        columns = get_terminal_size().columns
+
         print("# STEP ############################################")
-        terminalplot.plot(list(range(len(step))), list(step),columns=columns, rows=int(columns/6))
+        terminalplot.plot(
+            list(range(len(step))), list(step), columns=columns, rows=int(columns / 6)
+        )
         print("# TIME (sec) ######################################")
-        terminalplot.plot(list(range(len(ctime))), list(ctime),columns=columns, rows=int(columns/6))
-        #print("# TIME/STEP (sec) ############################################")
-        #terminalplot.plot(list(range(len(step))), list(ctime / step),columns=columns, rows=int(columns/6))
+        terminalplot.plot(
+            list(range(len(ctime))), list(ctime), columns=columns, rows=int(columns / 6)
+        )
+        # print("# TIME/STEP (sec) ############################################")
+        # terminalplot.plot(list(range(len(step))), list(ctime / step),columns=columns, rows=int(columns/6))
+    elif backend == "plotext":
+        import plotext as plt
+
+        plt.plot(list(range(len(step))), list(step), label="step")
+        plt.plot(list(range(len(ctime))), list(ctime), label="time")
+        plt.show()
+    else:
+        print("No available backend")
 
     print("# summary ######################################")
     print("Total steps:", np.sum(step))
@@ -66,4 +87,3 @@ if __name__ == "__main__":
         round(np.sum(ctime) / 60, 1),
         "min",
     )
-    
