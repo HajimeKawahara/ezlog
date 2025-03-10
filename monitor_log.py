@@ -47,9 +47,9 @@ if __name__ == "__main__":
     step, ctime = count_steps(sys.argv[1])
 
     backend = "terminalplot"
-    if len(sys.argv)>2:
+    if len(sys.argv) > 2:
         backend = sys.argv[2]
-        
+
     if backend == "terminalplot":
         import terminalplot
         from terminalplot import get_terminal_size
@@ -72,8 +72,15 @@ if __name__ == "__main__":
         plt.plot(list(range(len(step))), list(step), label="step")
         plt.plot(list(range(len(ctime))), list(ctime), label="time")
         plt.show()
+    elif backend == "termplotlib":
+        import termplotlib as tpl
+
+        fig = tpl.figure()
+        fig.plot(list(range(len(step))), list(step), width=120, height=20, label="step")
+        fig.plot(list(range(len(ctime))), list(ctime), width=120, height=20, label="time")
+        fig.show()
     else:
-        print("No available backend")
+        print("No available backend. Choose terminalplot, plotext, or termplotlib")
 
     print("# summary ######################################")
     print("Total steps:", np.sum(step))
