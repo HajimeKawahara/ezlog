@@ -56,6 +56,7 @@ if __name__ == "__main__":
     print("Total steps:", np.sum(step))
     print("# of chain:", len(step))
     print("median/chain:", np.median(step), "|min-max", np.min(step), "-", np.max(step))
+    print("time per one spectrum:",round(np.sum(ctime)/np.sum(step),2),"sec/step")
     print(
         "total time=",
         round(np.sum(ctime) / 3600, 3),
